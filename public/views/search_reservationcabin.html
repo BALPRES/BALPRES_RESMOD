@@ -1,0 +1,109 @@
+<div ng-controller="reservationcabin-controller">
+
+    <div class="header clearfix">
+        <nav class="navbar navbar-light" style="background-color: white;">
+
+            <h1 class="navbar-brand display-1" href="#">
+                <img src="http://i.imgur.com/VOkVHqw.png" width="50" height="50" class="d-inline-block align-top" alt="">
+
+                <h3 class="d-inline">Balneario Las Palmas <small class="text-muted">[Reservaciones]</small></h3>
+            </h1>
+
+        </nav>
+    </div>
+
+    <div class="jumbotron" style="background-color:green; color:white;">
+        <h1 class="display-4">Busca reservaciones disponibles</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-addon" id="addon_date_start"><i class="fa fa-sign-in" aria-hidden="true"></i></span>
+                <input type="text" id="date_start" name="date_start" class="form-control" ng-model="date_start" ng-change="onDateChange()" aria-describedby="addon_date_start" placeholder="Entrada">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-addon" id="addon_date_end"><i class="fa fa-sign-out" aria-hidden="true"></i></span>
+                <input type="text" id="date_end" name="date_end" class="form-control" ng-model="date_end" ng-change="onDateChange()" aria-describedby="addon_date_end" placeholder="Salida">
+            </div>
+        </div>
+        <div class="col-md-4 pull-right">
+            <button type="button" class="btn btn-info btn-block" name="button" ng-click="search()"> Buscar</button>
+        </div>
+    </div>
+
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-warning" role="alert" ng-if="message">
+                <p class="lead"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> {{message}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-if="cabins">
+        <div class="col-md-12" ng-repeat="c in cabins">
+            <div class="card">
+                <div class="card-header" style="background-color:#489fdf;color:white;">
+                <b>{{c.cabin_type.name}}</b>
+                </div>
+                <div class="card-block">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img ng-src="{{c.img_url}}" alt="..." class="img-thumbnail">
+                        </div>
+                        <div class="col-md-8">
+                            <h3>{{c.name}}</h3>
+                            <p class="lead">{{c.description}}</p>
+                            <p class="lead"><i class="fa fa-cubes" aria-hidden="true"></i> {{c.cabin_type.rooms}} Recamáras</p>
+                            <p class="lead"><span class="badge badge-danger" >{{c.price}}</span></p>
+                            <a href="#/reservations/new/{{c.id}}"><button class="btn btn-sm btn-primary" type="button" name="reserve"><i class="fa fa-calendar" aria-hidden="true"></i> Reservar</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" ng-if="!cabins">
+        Seleccione sus fechas por favor.
+    </div>
+
+    <hr>
+
+    <footer ng-include="'../includes/footer.html'"></footer>
+
+</div>
+
+<script>
+    $(document).ready( function() {
+        $('#date_start').datetimepicker({
+            format:'Y/m/d',
+            timepicker: false,
+            onShow:function( ct ){
+                var endDate = $('#date_end').val() ? new Date( $('#date_end').val() ) : false;
+                if( endDate!=false ) {
+                    endDate.setDate( endDate.getDate() - 1 );
+                    this.setOptions({
+                        maxDate : jQuery('#date_end').val() ? endDate : false
+                    })
+                }
+            }
+        });
+
+        $('#date_end').datetimepicker({
+            format:'Y/m/d',
+            timepicker: false,
+            onShow:function( ct ){
+                var endDate = $('#date_start').val() ? new Date( $('#date_start').val() ) : false;
+                if( endDate!=false ) {
+                    endDate.setDate( endDate.getDate() + 1 );
+                    this.setOptions({
+                        minDate : jQuery('#date_start').val() ? endDate : false
+                    })
+                }
+            }
+        });
+    });
+</script>

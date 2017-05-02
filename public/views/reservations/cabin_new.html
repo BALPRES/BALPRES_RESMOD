@@ -1,0 +1,126 @@
+<div ng-controller="reservationcabin-controller">
+
+    <div class="header clearfix">
+        <nav class="navbar navbar-light" style="background-color: white;">
+
+            <h1 class="navbar-brand display-1" href="#">
+                <img src="http://i.imgur.com/VOkVHqw.png" width="50" height="50" class="d-inline-block align-top" alt="">
+
+                <h3 class="d-inline">Balneario Las Palmas <small class="text-muted">[Reservaciones]</small></h3>
+            </h1>
+
+        </nav>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert" ng-if="errors">
+                <strong>Error al agregar objecto</strong>
+                <p>{{errors}}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header" style="background-color:#489fdf;color:white;">
+                    <b>{{cabin.cabin_type.name}}</b>
+                </div>
+                <div class="card-block">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <img ng-src="{{cabin.img_url}}" alt="{{cabin.name}}" class="img-thumbnail">
+                            <br>
+                        </div>
+                        <div class="col-md-12">
+                            <br>
+                            <h3>{{cabin.name}}</h3>
+                            <p class="lead"><i class="fa fa-cubes" aria-hidden="true"></i> {{cabin.cabin_type.rooms}} Recamáras</p>
+                            <p class="lead"><span class="badge badge-danger" style="font-size:28px;color:blue;"><b>$ {{cabin.price}}</b></span> por noche</p>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-secondary" ng-click="red_extra_child()"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                                </div>
+                                <div class="col-md-2">
+                                    <h3 style="color:blue;">{{reservation.extra_guests_child}}</h3>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-secondary" ng-click="sum_extra_child()"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                </div>
+                                <div class="col-md-6">
+                                    Boleto Extra Niños <br>
+                                    <small>$ {{ticket_price_child}} C/U</small>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-secondary" ng-click="red_extra_adult()"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                                </div>
+                                <div class="col-md-2">
+                                    <h3 style="color:blue;">{{reservation.extra_guests_adult}}</h3>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-secondary" ng-click="sum_extra_adult()"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                </div>
+                                <div class="col-md-6">
+                                    Boleto Extra Adultos <br>
+                                    <small>$ {{ticket_price_adult}} C/U</small>
+                                </div>
+                            </div>
+                            <hr>
+                            <p class="lead">de <b>{{reservation.date_start|dateFilter}}</b> a <b>{{reservation.date_end|dateFilter}}</b> ({{days}} noches)</p>
+                            <p class="lead"><span class="badge badge-danger" style="font-size:35px;color:red;">Total <b>$ {{reservation.total}}</b></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6" ng-include="'../views/reservations/reservation_info.html'"></div>
+
+
+    </div>
+
+    <hr>
+
+    <div class="row">
+
+    </div>
+
+    <hr>
+
+    <footer ng-include="'../includes/footer.html'"></footer>
+
+</div>
+
+<script>
+    $(document).ready( function() {
+        $('#date_start').datetimepicker({
+            format:'Y/m/d',
+            timepicker: false,
+            onShow:function( ct ){
+                var endDate = $('#date_end').val() ? new Date( $('#date_end').val() ) : false;
+                if( endDate!=false ) {
+                    endDate.setDate( endDate.getDate() - 1 );
+                    this.setOptions({
+                        maxDate : jQuery('#date_end').val() ? endDate : false
+                    })
+                }
+            }
+        });
+
+        $('#date_end').datetimepicker({
+            format:'Y/m/d',
+            timepicker: false,
+            onShow:function( ct ){
+                var endDate = $('#date_start').val() ? new Date( $('#date_start').val() ) : false;
+                if( endDate!=false ) {
+                    endDate.setDate( endDate.getDate() + 1 );
+                    this.setOptions({
+                        minDate : jQuery('#date_start').val() ? endDate : false
+                    })
+                }
+            }
+        });
+    });
+</script>
