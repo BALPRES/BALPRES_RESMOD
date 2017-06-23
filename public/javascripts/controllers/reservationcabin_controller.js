@@ -31,6 +31,13 @@ app
                     url : '/reservationcabin/new/',
                     data : JSON.stringify( data )
                 });
+            },
+            updateReservation : function( data ) {
+                return $http({
+                    method : 'PUT',
+                    url : '/reservationcabin/edit/',
+                    data : JSON.stringify( data )
+                });
             }
         });
     }])
@@ -42,20 +49,30 @@ app
                                                     'ReservationCabinRepository',
                                                     'SettingsRepository',
                                                     'DocumentService',
+                                                    'PaymentRepository',
                                                     function(   $scope,
                                                                 $rootScope,
                                                                 $routeParams,
                                                                 $location,
                                                                 ReservationCabinRepository,
                                                                 SettingsRepository,
-                                                                DocumentService ) {
+                                                                DocumentService,
+                                                                PaymentRepository  ) {
         if( $routeParams.token ) {
 
             $rootScope.title = "Detalle reservación [Balneario Las Palmas]";
-
             ReservationCabinRepository.getById( $routeParams.token ).success( function( data ) {
                 if( !data.error ) {
                     $scope.reservation = data.data;
+                    PaymentRepository.getPayment( $scope.reservation.payment_info.collection_id ).success( function( d2 ) {
+                        if( !data.error ) {
+                            $scope.collection = d2.data.response.results[0].collection;
+                        } else {
+                            $scope.errors = d2.message;
+                        }
+                    }).error( function( error ) {
+                        $scope.errors = error;
+                    });
                 } else {
                     $scope.errors = data.message;
                 }
@@ -108,6 +125,11 @@ app
                         country : "México",
                         city : "Fresnillo",
                         phone_number : ""
+                    },
+                    payment_info : {
+                        preference_mp_id : "",
+                        preference_mp_init_point : "",
+                        collection_id : 0
                     }
                 };
             };
@@ -150,22 +172,36 @@ app
 
             getCabin( $routeParams.id );
 
-            $scope.reservePay = function() {
-                console.log( "This is reservation and pay test" );
-                console.log( $scope.reservation );
-            };
-
             $scope.reserveAndPrint = function() {
                 var d_s = new Date( $scope.reservation.date_start ),
                     d_e = new Date( $scope.reservation.date_end );
                 $scope.reservation.date_start = d_s.getFullYear() + "/" + ( d_s.getMonth() + 1 ) + "/" + d_s.getDate();
                 $scope.reservation.date_end = d_e.getFullYear() + "/" + ( d_e.getMonth() + 1 ) + "/" + d_e.getDate();
-                ReservationCabinRepository.reserveCabin( $scope.reservation ).success( function( data ) {
-                    if( !data.error ) {
-                        $scope.reservation = data.data;
-                        $location.path( '/reservations/cabin/' + $scope.reservation.extended_token );
+
+                ReservationCabinRepository.reserveCabin( $scope.reservation ).success( function( d1 ) {
+                    if( !d1.error ) {
+                        $scope.reservation = d1.data;
+                        PaymentRepository.reservationPayment( $scope.reservation ).success( function( d2 ) {
+                            if( !d2.error ) {
+                                $scope.reservation.payment_info.preference_mp_id = d2.data.response.id;
+                                $scope.reservation.payment_info.preference_mp_init_point = d2.data.response.init_point;
+                                ReservationCabinRepository.updateReservation( $scope.reservation ).success( function( d3 ) {
+                                    if( !d3.error ) {
+                                        window.open( d2.data.response.init_point, '_self' );
+                                    } else {
+                                        $location.path( '/reservations/cabin/' + $scope.reservation.extended_token );
+                                    }
+                                }).error( function( error ) {
+                                    $scope.errors = error;
+                                });
+                            } else {
+                                $scope.errors = d2.message;
+                            }
+                        }).error( function( error ) {
+                            $scope.errors = error;
+                        });
                     } else {
-                        $scope.errors = data.message;
+                        $scope.errors = d1.message;
                     }
                 }).error( function( error ) {
                     $scope.errors = error;

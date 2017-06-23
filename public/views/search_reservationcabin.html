@@ -46,19 +46,25 @@
         <div class="col-md-12" ng-repeat="c in cabins">
             <div class="card">
                 <div class="card-header" style="background-color:#489fdf;color:white;">
-                <b>{{c.cabin_type.name}}</b>
+                    <b>{{c.cabin_type.name}}</b>
                 </div>
                 <div class="card-block">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <img ng-src="{{c.img_url}}" alt="..." class="img-thumbnail">
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-3">
                             <h3>{{c.name}}</h3>
                             <p class="lead">{{c.description}}</p>
+                        </div>
+                        <div class="col-md-3">
                             <p class="lead"><i class="fa fa-cubes" aria-hidden="true"></i> {{c.cabin_type.rooms}} Recamáras</p>
-                            <p class="lead"><span class="badge badge-danger" >{{c.price}}</span></p>
-                            <a href="#/reservations/new/{{c.id}}"><button class="btn btn-sm btn-primary" type="button" name="reserve"><i class="fa fa-calendar" aria-hidden="true"></i> Reservar</button></a>
+                            <p class="lead"><i class="fa fa-users" aria-hidden="true"></i> {{c.cabin_type.max_guests}} Personas</p>
+                            <p class="lead"><i class="fa fa-plus" aria-hidden="true"></i> {{c.cabin_type.max_extra_guests}} Extras</p>
+                        </div>
+                        <div class="col-md-3 text-xs-right">
+                            <h2 class="lead" style="font-size:30px;">$ {{c.price}}</h2>
+                            <a href="#/reservations/new/{{c.id}}"><button class="btn btn-md btn-primary" type="button" name="reserve"><i class="fa fa-calendar" aria-hidden="true"></i> Reservar</button></a>
                         </div>
                     </div>
                 </div>

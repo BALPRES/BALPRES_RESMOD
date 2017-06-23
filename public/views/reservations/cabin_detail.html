@@ -18,8 +18,8 @@
             <small>ID: {{reservation.extended_token}}</small>
         </div>
         <div class="col-md-8">
-            <small ng-if="reservation.payment_status.value == 1">Esta recervación no ha sido pagada, tendrá que pagarse en taquilla. Le sugerimos mantener su recibo impreso, una identificación oficial a la mano al que se hizo la reservación y $500 pesos de depósito que se le entregarán al terminar su estancia. Muchas Gracias por su preferencia.</small>
-            <small ng-if="reservation.payment_status.value == 2">Esta recervación ya ha sido pagada. Le sugerimos mantener su recibo impreso, una identificación oficial a la mano al que se hizo la reservación y $500 pesos de depósito que se le entregarán al terminar su estancia. Muchas Gracias por su preferencia.</small>
+            <small ng-if="collection.status == 'pending'">Esta recervación no ha sido pagada. La forma en la que se eligío hacer el pago fue <b>{{collection.payment_method_id}}</b>. Le sugerimos hacer el pago lo más antes posbile, si no la reservación no quedará cerrada. Muchas Gracias por su preferencia.</small>
+            <small ng-if="collection.status == 'approved'">Esta recervación ya ha sido pagada. Le sugerimos mantener su recibo impreso, una identificación oficial a la mano al que se hizo la reservación y $500 pesos de depósito que se le entregarán al terminar su estancia. Muchas Gracias por su preferencia.</small>
         </div>
     </div>
     <div class="row" id="recipt" >
@@ -49,7 +49,9 @@
                     <li class="list-group-item"><b>País :</b> {{reservation.reservation_info.country}}</li>
                 </ul>
                 <div class="card-block text-align-right">
-                    <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-env" aria-hidden="true"></i> Enviar</button>
+                    <a href="{{reservation.payment_info.preference_mp_init_point}}" ng-if="!collection">
+                        <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-credit-card" aria-hidden="true"></i> Pagar</button>
+                    </a>
                     <button type="button" class="btn btn-sm btn-info" ng-click="print()"><i class="fa fa-print" aria-hidden="true"></i> Imprimir</button>
                 </div>
             </div>

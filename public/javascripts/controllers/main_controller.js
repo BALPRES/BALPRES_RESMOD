@@ -1,4 +1,4 @@
-var app = angular.module( 'BALPRES_RESERVATIONS', [ 'ngRoute', 'ngCookies', 'ngMaterial', 'document-service' ])
+var app = angular.module( 'BALPRES_RESERVATIONS', [ 'ngRoute', 'ngCookies', 'ngMaterial', 'document-service', 'payment-service' ])
     .config([ '$routeProvider', '$locationProvider', function( $routeProvider, $locationProvider ) {
         $routeProvider
             .when( '/cabins/', {
@@ -6,6 +6,9 @@ var app = angular.module( 'BALPRES_RESERVATIONS', [ 'ngRoute', 'ngCookies', 'ngM
             })
             .when( '/reservations/cabin/:token', {
                 templateUrl : '../views/reservations/cabin_detail.html'
+            })
+            .when( '/reservations/paymenterror', {
+                templateUrl : '../views/reservations/payment_error.html'
             })
             .when( '/reservations/new/:id', {
                 templateUrl : '../views/reservations/cabin_new.html'

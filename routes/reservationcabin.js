@@ -168,4 +168,42 @@ router.post( '/new/', jsonParser, function( req, res ) {
     );
 });
 
+/**
+* new reservation cabin
+**/
+router.put( '/edit/', jsonParser, function( req, res ) {
+
+    request(
+        {
+            url : http_helper.get_api_uri( 'reservation/cabin/detail/', req.body.id ),
+            method : 'PUT',
+            json : true,
+            body : encryption_system.encryptLongJSON( req.body ),
+            headers : {
+                'Authorization' : http_helper.get_basic_auth_app_header()
+            }
+        },
+        function( error, response, body ) {
+            switch( response.statusCode ) {
+                case 200 :
+                    var data_from_server = encryption_system.decryptLongJSON( body );
+                    var jsonData = JSON.stringify({
+                        error : false,
+                        data : data_from_server.data
+                    });
+                    res.send( jsonData );
+                    break;
+                default :
+                    var data_from_server = encryption_system.decryptLongJSON( body );
+                    var jsonData = JSON.stringify({
+                        error : true,
+                        message : data_from_server.message
+                    });
+                    res.send( jsonData );
+                    break;
+            }
+        }
+    );
+});
+
 module.exports = router;

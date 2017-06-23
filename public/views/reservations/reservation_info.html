@@ -1,6 +1,6 @@
 <h2>Información de reservación</h2>
 <hr>
-<form name="reservationInfoForm">
+<form name="reservationInfoForm" ng-submit="reserveAndPrint()">
 
     <div class="col-md-12">
         <div class="form-group">
@@ -133,17 +133,17 @@
     </div>
 
     <div class="col-md-6">
-        <button
-            type="submit"
-            ng-click="reservePay()"
-            class="btn btn-danger btn-block">Pagar en línea</button>
+        <a href="#/cabins/">
+            <button
+                type="button"
+                class="btn btn-danger btn-block">Cancelar</button>
+        </a>
     </div>
-
+    
     <div class="col-md-6">
         <button
             type="submit"
-            ng-click="reserveAndPrint()"
-            class="btn btn-success btn-block">Pagar en caja</button>
+            class="btn btn-success btn-block">Reservar y Pagar</button>
     </div>
 
 </form>
